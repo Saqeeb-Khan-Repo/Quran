@@ -102,8 +102,7 @@ const Home = () => {
                       <audio
                         controls
                         className="w-full"
-                        src={`https://cdn.islamic.network/quran/audio-surah/64/ar.alafasy/${surah.number}.mp3`}
-                        onClick={(e) => e.stopPropagation()}
+                        src={`/api/surah-audio/ar.alafasy/${surah.number}`}
                       />
                     </div>
                   )}
