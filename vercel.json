@@ -1,4 +1,5 @@
 {
+  "version": 2,
   "functions": {
     "api/surah-audio/**": {
       "runtime": "@vercel/node@2.15.10"
