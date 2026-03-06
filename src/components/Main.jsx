@@ -12,7 +12,7 @@ const Main = () => {
   const navigate = useNavigate();
 
   // Map UI lang -> AlQuran.cloud edition id
-  const editionForLang = lang === "en" ? "en.asad" : "ur.jalandhry";
+  const editionForLang = lang === "en" ? "en.asad" : "ur.jalandhari";
 
   const fetchAllSurahs = async () => {
     try {

@@ -4,7 +4,7 @@ import Main from "./components/Main";
 import SurahPage from "./components/SurahPage";
 
 function App() {
-  return (
+   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Main />} />
