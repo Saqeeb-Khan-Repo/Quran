@@ -15,13 +15,12 @@ export default async function handler(req, res) {
     const upstream = await fetch(url);
 
     if (!upstream.ok) {
-      return res
-        .status(502)
-        .json({
-          error: "Failed to fetch audio from CDN",
-          status: upstream.status,
-        });
+      return res.status(502).json({
+        error: "Failed to fetch audio from CDN",
+        status: upstream.status,
+      });
     }
+    
 
     const arrayBuffer = await upstream.arrayBuffer();
     const uint8 = new Uint8Array(arrayBuffer);
