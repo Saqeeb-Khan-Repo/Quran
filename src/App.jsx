@@ -1,13 +1,18 @@
-import Home from "./components/Home";
-const App = () => {
+// App.jsx
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Main from "./components/Main";
+import SurahPage from "./components/SurahPage";
+
+function App() {
   return (
-    <main className="bg-slate-950 h-screen w-full text-amber-50">
-      <h1 className="text-4xl  text-center font-semibold font-mono p-3.5">
-        Assalamu Alaikum
-      </h1>
-      <Home/>
-    </main>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/Quran" element={<Main />} />
+        <Route path="/Quran/surah/:surahNumber" element={<SurahPage />} />
+        <Route path="/surah/:surahNumber" element={<SurahPage />} />
+      </Routes>
+    </BrowserRouter>
   );
-};
+}
 
 export default App;
