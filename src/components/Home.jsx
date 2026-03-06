@@ -108,6 +108,7 @@ const Home = () => {
                   )}
                 </div>
               </div>
+              
 
               {/* Expanded area: full width */}
               {isOpen && (
