@@ -20,6 +20,7 @@ export default async function handler(req, res) {
         status: upstream.status,
       });
     }
+
     
 
     const arrayBuffer = await upstream.arrayBuffer();
