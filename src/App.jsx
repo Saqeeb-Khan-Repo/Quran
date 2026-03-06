@@ -7,6 +7,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Main />} />
         <Route path="/Quran" element={<Main />} />
         <Route path="/Quran/surah/:surahNumber" element={<SurahPage />} />
         <Route path="/surah/:surahNumber" element={<SurahPage />} />
