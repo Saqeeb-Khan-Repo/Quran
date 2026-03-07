@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Main = () => {
-  const [surahs, setSurahs] = useState([]); // [{ meta, arabic, translation }]
+  const [surahs, setSurahs] = useState([]); // [{ meta, arabic, en, ur }]
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedSurah, setExpandedSurah] = useState(null);
@@ -11,49 +11,44 @@ const Main = () => {
   const [lang, setLang] = useState("en"); // "en" or "ur"
   const navigate = useNavigate();
 
-  // Map UI lang -> AlQuran.cloud edition id
-  const editionForLang = lang === "en" ? "en.asad" : "ur.jalandhary" ;
+  const getTranslation = (s) => (lang === "en" ? s.en : s.ur);
 
   const fetchAllSurahs = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // 1) get basic list of Surahs (numbers, names)
       const resList = await fetch("https://api.alquran.cloud/v1/surah");
       const listJson = await resList.json();
-      const list = listJson.data; // array of surah meta
+      const list = listJson.data;
 
       const results = [];
 
-      // 2) fetch Arabic + translation for each Surah
       for (const s of list) {
         const res = await fetch(
-          `https://api.alquran.cloud/v1/surah/${s.number}/editions/quran-uthmani,${editionForLang}`,
+          `https://api.alquran.cloud/v1/surah/${s.number}/editions/quran-uthmani,en.asad,ur.jalandhry`,
         );
         const json = await res.json();
-        // json.data[0] = Arabic, json.data[1] = translation
         results.push({
           meta: s,
           arabic: json.data[0],
-          translation: json.data[1],
+          en: json.data[1],
+          ur: json.data[2],
         });
       }
 
       setSurahs(results);
-    } catch (err) {
-      console.error("API error", err);
+    } catch (e) {
+      console.error(e);
       setError("Failed to load Quran data");
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch on mount and whenever language changes
   useEffect(() => {
     fetchAllSurahs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editionForLang]);
+  }, []);
 
   const openSurah = (surahNumber) => {
     navigate(`/surah/${surahNumber}?lang=${lang}`);
@@ -79,7 +74,6 @@ const Main = () => {
     );
   }
 
-  // Filter by search
   const filteredSurahs = surahs.filter(({ meta }) => {
     if (!search.trim()) return true;
     const q = search.toLowerCase();
@@ -125,7 +119,9 @@ const Main = () => {
           </p>
         )}
 
-        {filteredSurahs.map(({ meta, arabic, translation }) => {
+        {filteredSurahs.map((s) => {
+          const { meta, arabic } = s;
+          const tr = getTranslation(s);
           const isOpen = expandedSurah === meta.number;
 
           return (
@@ -167,7 +163,7 @@ const Main = () => {
                 >
                   <div className="max-h-104 overflow-y-auto p-4 md:p-6 space-y-3">
                     {arabic.ayahs.map((a, idx) => {
-                      const t = translation.ayahs[idx];
+                      const t = tr.ayahs[idx];
                       return (
                         <button
                           key={a.number}
@@ -183,11 +179,9 @@ const Main = () => {
                               Tap to open full Surah
                             </span>
                           </div>
-                          {/* Arabic */}
                           <p className="text-2xl md:text-3xl leading-relaxed text-right font-semibold text-emerald-100 mb-2">
                             {a.text}
                           </p>
-                          {/* Translation */}
                           <p className="text-sm md:text-base text-slate-200 font-bold">
                             {t?.text}
                           </p>
